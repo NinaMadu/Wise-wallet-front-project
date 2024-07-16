@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Wise Wallet</title>
+    <link rel="stylesheet" href="../old one/styles.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h2 class="logo">Wise Wallet</h2>
+        <nav class="navigation">
+            <a href="remaining.html">Home</a>
+            <a href="income tracker.html">Income</a>
+            <a href="new tracker.html">Expense</a>
+            <a href="ExpenseVsIncome.html">Statistics</a>
+            <button class="btnlogin-popup" onclick="location.href='../old one/index.html'">Logout</button>
+        </nav>
+    </header>
+
+    <!--<div class="wrapper">
+        <span class="icon-close"><ion-icon name="close-circle-outline"></ion-icon></span>
+    </div>-->
+
+    <div class="chart-wrapper">
+
+        <div class="chart-container">
+            <h1>Expense Statistics</h1>
+
+            <div class="chart-container">
+                <canvas id="expenseChart"></canvas>
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <h1>Income Statistics</h1>
+            <div class="chart-container">
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h1>Expense and Income Distribution</h1>
+            <div class="pie-chart-container">
+                <canvas id="myPieChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let expenses = JSON.parse(sessionStorage.getItem('expenses')) || [];
+        let incomes = JSON.parse(sessionStorage.getItem('incomes')) || [];
+        let totalExpense = calculateTotalAmount(expenses);
+        let totalIncome = calculateTotalAmount(incomes);
+
+        function saveDataToSessionStorage() {
+            sessionStorage.setItem('expenses', JSON.stringify(expenses));
+            sessionStorage.setItem('incomes', JSON.stringify(incomes));
+        }
+
+        function calculateTotalAmount(data) {
+            return data.reduce((total, entry) => total + parseFloat(entry.amount), 0);
+        }
+
+        function groupDataByDate(data) {
+            const groupedData = {};
+
+            for (const entry of data) {
+                const date = entry.date;
+                if (groupedData[date]) {
+                    groupedData[date] += parseFloat(entry.amount);
+                } else {
+                    groupedData[date] = parseFloat(entry.amount);
+                }
+            }
+
+            return groupedData;
+        }
+
+        function updateBarChart(chartId, data, label, backgroundColor, borderColor) {
+            var ctx = document.getElementById(chartId).getContext('2d');
+
+            const groupedData = groupDataByDate(data);
+            const dateLabels = Object.keys(groupedData);
+            const amounts = Object.values(groupedData);
+
+            var chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: label,
+                        data: amounts,
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: true,
+                        text: `${label} vs Date`
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            };
+
+            var myBarChart = new Chart(ctx, chartConfig);
+        }
+
+        function updatePieChart() {
+            var ctx = document.getElementById('myPieChart').getContext('2d');
+
+            var chartConfig = {
+                type: 'pie',
+                data: {
+                    labels: ['Expenses', 'Incomes'],
+                    datasets: [{
+                        data: [totalExpense, totalIncome],
+                        backgroundColor: ['#FF5733', '#33FF57'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: true,
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Expense and Income Distribution'
+                    }
+                }
+            };
+
+            var myPieChart = new Chart(ctx, chartConfig);
+        }
+
+        // Call the functions to update all three charts
+        updateBarChart('expenseChart', expenses, 'Total Expenses', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+        updateBarChart('incomeChart', incomes, 'Total Incomes', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 99, 132, 1)');
+        updatePieChart();
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>

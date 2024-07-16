@@ -41,6 +41,7 @@ body {
   table {
     width: 100%;
     border-collapse: collapse;
+    background:linear-gradient(to bottom ,rgb(193, 218, 255),rgb(225, 255, 255));
   }
   
   th, td {
@@ -60,7 +61,8 @@ body {
   
   .delete-btn {
     padding: 5px 10px;
-    background-color: #f44336;
+    background:linear-gradient(to right ,rgb(226, 76, 84),rgb(201, 49, 49));
+	  font-weight: bolder;
     color: white;
     border: none;
     border-radius: 4px;

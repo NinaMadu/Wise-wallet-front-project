@@ -1,5 +1,7 @@
 // script.js 
 // Get form, expense list, and total amount elements 
+
+
 const expenseForm = 
 	document.getElementById("expense-form"); 
 const expenseList = 
@@ -30,7 +32,7 @@ function renderExpenses() {
 		expenseRow.innerHTML = ` 
 	<td>${expense.name}</td> 
 	<td>$${expense.amount}</td> 
-	<td class="delete-btn" data-id="${i}">Delete</td> 
+	<td class="delete-btn" data-id="${i}" >Delete</td> 
 	`; 
 		expenseList.appendChild(expenseRow); 
 
@@ -132,3 +134,5 @@ expenseList.addEventListener("click", deleteExpense);
 
 // Render initial expenses and incomes on page load 
 renderExpenses();
+
+

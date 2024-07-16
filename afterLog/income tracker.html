@@ -3,13 +3,13 @@
 <head>
 <title>Wise Wallet
 </title>  
-<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style1.css">
 <link  rel="stylesheet" href="../old one/styles.css" >
 <link  rel="stylesheet" href="style.css" >
-   
+<link  rel="stylesheet" href="style1.css" >   
+
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
 </head>
 
 <body>
@@ -25,31 +25,19 @@
   </nav>
 </header>
 
-<div class="wrapper">
-
-<span class="icon-close"><ion-icon name="close-circle-outline"></ion-icon></span>
-
-
-
-
-
-</div>
-
-
 
 
 <div class="container"> 
-    <h2>Expense Table</h2>
+    <h2>Income Table</h2>
     <div class="input-section">
         <label for="category-select">Category:</label>
         <select id="category-select">
-            <option value="Food & Beverage">Food & Beverage</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Health">Health</option>
-            <option value="Rent">Rent</option>
-            <option value="Bills">Bills</option>
+            <option value="Salary">Salary</option>
+            <option value="Bonus">Bonus</option>
+            <option value="Allowance">Allowance</option>
+            <option value="Petty">Petty cash</option>
+            <option value="Rental">Rental</option>
+            <option value="Other">Other</option>
         </select>
         <label for="amount-input">Amount:</label>
         <input type="number" id="amount-input">
@@ -57,9 +45,11 @@
         <input type="date" id="date-input">
         
     </div>
-    <button id="add-btn">Add</button>
+
+    <button id="add-btn" style="background:linear-gradient(to right ,rgb(130, 172, 16),rgb(5, 173, 5));font-weight: bolder;">Add</button>
+    
     <div class="expenses-list">
-        <h3>Expenses List</h3>
+        <h3>Income List</h3>
         <table>
             <thead>
                 <tr>
@@ -69,7 +59,7 @@
                     <th>Delete</th>
                 </tr>
             </thead>
-            <tbody id="expnese-table-body">
+            <tbody id="income-table-body">
 
             </tbody>
             <tfoot>
@@ -82,10 +72,7 @@
             </tfoot>
         </table>
     </div> 
-    <script src="script1.js"></script>
-
-
-   
+    <script src="script2.js"></script>
 
 
 <script src="script.js"></script>

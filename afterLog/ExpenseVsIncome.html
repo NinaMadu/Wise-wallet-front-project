@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Wise Wallet</title>
+    <link rel="stylesheet" href="../old one/styles.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h2 class="logo">Wise Wallet</h2>
+        <nav class="navigation">
+            <a href="remaining.html">Home</a>
+            <a href="income tracker.html">Income</a>
+            <a href="new tracker.html">Expense</a>
+            <a href="ExpenseVsIncome.html">Statistics</a>
+            <button class="btnlogin-popup" onclick="location.href='../old one/index.html'">Logout</button>
+        </nav>
+    </header>
+
+    <div class="chart-wrapper">
+
+        <div class="chart-container" style="background:linear-gradient(to bottom ,rgb(218, 232, 245),rgb(255, 255, 255));">
+            <p class="name-expense">Expense and Income Statistics</p>
+            <br>
+            <div class="chart-container">
+                <canvas id="combinedChart"></canvas>
+            </div>
+
+        </div>
+
+        <div class="chart-container" style="background:linear-gradient(to bottom ,rgba(248, 226, 241, 0.774),rgb(255, 255, 255));">
+            <p class="name-expense">Income and Expense Distribution</p>
+            <br>
+            <div class="pie-chart-container">
+                <canvas id="myPieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container" style="background:linear-gradient(to bottom ,rgba(233, 231, 231, 0.774),rgb(255, 255, 255));">
+            <p class="name-expense">Expenses Trend</p>
+            <br>
+            <div class="line-chart-container">
+                <canvas id="expenseLineChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container" style="background:linear-gradient(to bottom ,rgba(245, 233, 218, 0.774),rgb(255, 255, 255));">
+            <p class="name-expense">Incomes Trend</p>
+            <br>
+            <div class="line-chart-container">
+                <canvas id="incomeLineChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let expenses = JSON.parse(sessionStorage.getItem('expenses')) || [];
+        let incomes = JSON.parse(sessionStorage.getItem('incomes')) || [];
+
+        function saveDataToSessionStorage() {
+            sessionStorage.setItem('expenses', JSON.stringify(expenses));
+            sessionStorage.setItem('incomes', JSON.stringify(incomes));
+        }
+
+        function groupDataByDate(expenseData, incomeData) {
+            const groupedData = {};
+            const allDates = new Set([...expenseData.map(entry => entry.date), ...incomeData.map(entry => entry.date)]);
+
+            for (const date of allDates) {
+                const expenseTotal = expenseData.filter(entry => entry.date === date).reduce((total, entry) => total + parseFloat(entry.amount), 0);
+                const incomeTotal = incomeData.filter(entry => entry.date === date).reduce((total, entry) => total + parseFloat(entry.amount), 0);
+                groupedData[date] = {
+                    expense: expenseTotal,
+                    income: incomeTotal
+                };
+            }
+
+            return groupedData;
+        }
+
+        function updateCombinedChart() {
+            var ctx = document.getElementById('combinedChart').getContext('2d');
+            const groupedData = groupDataByDate(expenses, incomes);
+            const dates = Object.keys(groupedData);
+            const expenseAmounts = dates.map(date => groupedData[date].expense);
+            const incomeAmounts = dates.map(date => groupedData[date].income);
+
+            var chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                            label: 'Total Expenses',
+                            data: expenseAmounts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Total Incomes',
+                            data: incomeAmounts,
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: true,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Expense and Income vs Date'
+                    },
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }],
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    barPercentage: 0.25
+                }
+            };
+
+            var myCombinedChart = new Chart(ctx, chartConfig);
+        }
+
+        function updatePieChart() {
+            var ctx = document.getElementById('myPieChart').getContext('2d');
+            let totalExpense = calculateTotalAmount(expenses);
+            let totalIncome = calculateTotalAmount(incomes);
+
+            var chartConfig = {
+                type: 'doughnut',
+                data: {
+                    labels: ['Expenses', 'Incomes'],
+                    datasets: [{
+                        data: [totalExpense, totalIncome],
+                        backgroundColor: ['#4bc0c0', '#E75480'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutoutPercentage: 80,
+                    legend: {
+                        display: true,
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Expense and Income Distribution'
+                    }
+                }
+            };
+
+            var myPieChart = new Chart(ctx, chartConfig);
+        }
+
+        function updateLineCharts() {
+            var ctxExpense = document.getElementById('expenseLineChart').getContext('2d');
+            var ctxIncome = document.getElementById('incomeLineChart').getContext('2d');
+
+            const groupedData = groupDataByDate(expenses, incomes);
+            const dates = Object.keys(groupedData);
+            const expenseAmounts = dates.map(date => groupedData[date].expense);
+            const incomeAmounts = dates.map(date => groupedData[date].income);
+
+var expenseLineChartConfig = {
+    type: 'line',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Expenses',
+            data: expenseAmounts,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            display: true
+        },
+        title: {
+            display: true,
+            text: 'Expenses Trend'
+        },
+        scales: {
+            xAxes: [{
+                ticks: {
+                    autoSkip: false,
+                    maxRotation: 45,
+                    minRotation: 45
+                }
+            }]
+        }
+    }
+};
+
+var incomeLineChartConfig = {
+    type: 'line',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Incomes',
+            data: incomeAmounts,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            display: true
+        },
+        title: {
+            display: true,
+            text: 'Incomes Trend'
+        },
+        scales: {
+            xAxes: [{
+                ticks: {
+                    autoSkip: false,
+                    maxRotation: 45,
+                    minRotation: 45
+                }
+            }]
+        }
+    }
+};
+
+var expenseLineChart = new Chart(ctxExpense, expenseLineChartConfig);
+var incomeLineChart = new Chart(ctxIncome, incomeLineChartConfig);
+}
+
+function calculateTotalAmount(data) {
+return data.reduce((total, entry) => total + parseFloat(entry.amount), 0);
+}
+
+
+updateCombinedChart();
+updatePieChart();
+updateLineCharts();
+</script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
+

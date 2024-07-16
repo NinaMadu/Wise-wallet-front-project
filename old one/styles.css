@@ -58,22 +58,26 @@ header
 .containerr1{
   display: flex;
   column-gap: 150px;
-  
 }
+ 
 
 .boxx1{
   margin-left: 100px;
+ margin-right: 180px;
 }
+
+
+
 
 .boxx2{
   
   background-size: cover;
   background-position:center ;
-  margin-top: 150px;
+  margin-top: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 350px;
+  height: 310px;
   border-radius: 10px;
       
   
@@ -268,7 +272,7 @@ height: 520px;
 .form-box h2
 {
   font-size:2 em;
-  color:white;
+  color:rgb(5, 23, 61);
   text-align: center;
   
 }
@@ -286,7 +290,7 @@ height: 520px;
 
 #input {
 
-  color:#fff ;
+  color:rgb(5, 23, 61);
 
 }
 .input-box label
@@ -297,7 +301,7 @@ height: 520px;
   left: 5px;
   transform: translateY(-50%);
   font-size: 1em;
-  color: white;
+  color:rgb(5, 23, 61);
   font-weight: 500;
   pointer-events:none;
   transition: .5s;
@@ -331,7 +335,7 @@ height: 520px;
 position:absolute;
 right: 8px;
 font-size: 1.2em;
-color: white;
+color:rgb(5, 23, 61);
 line-height: 57px;
 
 }
@@ -339,7 +343,7 @@ line-height: 57px;
 .remember-forgot
 {
   font-size: .9em;
-  color: white;
+  color:rgb(5, 23, 61);
   font-weight: 500;
   margin: -15px 0 15px;
   display:flex;
@@ -348,12 +352,12 @@ line-height: 57px;
 }
 .remember-forgot label input
 {
-  accent-color: white;
+  color:rgb(5, 23, 61);
   margin-right: 3px;
   
 }
 .remember-forgot a{
-  color: white;
+  color:rgb(5, 23, 61);
   text-decoration: none;
 
 }
@@ -374,7 +378,7 @@ line-height: 57px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1 em;
-  color:#ffffff;
+  color:rgb(5, 23, 61);
   font-weight: 500;
 
 }
@@ -388,16 +392,16 @@ line-height: 57px;
 .login-register
 {
   font-size:.9em ;
-  color:white;
+  color:rgb(5, 23, 61);
   text-align: center;
   font-weight: 500;
-  margin: 25px 0 10px;
+  margin: 10px 0 0px;
 
 }
 
 .login-register p a{
 
-  color: white;
+  color:rgb(5, 23, 61);
   text-decoration:none ;
   font-weight: 500;
   

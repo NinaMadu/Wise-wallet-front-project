@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Wise Wallet</title>
+        <link rel="stylesheet" href="stylesTry.css"/>
+        <link rel="stylesheet" href="../old one/styles.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="account-summary.css">
+        
+        <style>
+            header {
+                text-align: center;
+            }
+    
+            .logo {
+                margin-bottom: 10px;
+            }
+    
+            .tagline {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+    
+            .container3 {
+                text-align: center;
+            }
+    
+            
+            #accountSummaryContainer {
+                font-size: 16px; 
+            }
+    
+            
+            #accountSummaryContainer .container6 h1,
+            #accountSummaryContainer .container6 span {
+                font-size: inherit; 
+            }
+    
+            .logout-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 10px;
+                background-color: #f44336; 
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+    
+            .navigation {
+                position: relative; 
+                
+            }
+    
+        </style>
+    </head>
+
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="#" class="logo">
+                       
+                        <span class="nav-item">WISE WALLET</span>
+                    </a>
+                </li>
+                <li><a href="#">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-item" style="color: azure;">Home</span>
+                </a></li>
+                <li><a href="income tracker.html">
+                    <i class="fa-fa-incomes"></i>
+                    <span class="nav-item" style="color: azure;">Incomes</span>
+                </a></li>
+                <li><a href="new tracker.html">
+                    <i class="fa-fa-expense"></i>
+                    <span class="nav-item" style="color: azure;">Expenses</span>
+                </a></li>
+                <li><a href="ExpenseVsIncome.html">
+                    <i class="fa-fa-graph"></i>
+                    <span class="nav-item" style="color: azure;">Statistics</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="fa-fa-logout"></i>
+                    <span class="nav-item" style="color: azure;">Logout</span>
+                </a></li>
+
+            </ul>
+        </nav>
+
+        <div id="accountSummaryContainer">
+        
+
+        
+            <div class="container6">
+                <h2>Account Summary : </h2>
+                <br>
+    
+                <h1>Total Income: $<span id="totalIncome">0.00</span></h1>
+                <h1>Total Expense: $<span id="totalExpense">0.00</span></h1>
+                <h1>Remaining Balance: $<span id="remaining">0.00</span></h1>
+                <h1>Expense Percentage: <span id="expensePercentage">0.00%</span></h1>
+                <h1>Balance Percentage: <span id="balancePercentage">0.00%</span></h1>
+            </div>
+    
+            <script src="remaining-script.js"></script>
+            <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+            <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Wise Wallet
+</title>  
+<link  rel="stylesheet" href="../old one/styles.css" >
+<link  rel="stylesheet" href="style.css" >
+<link  rel="stylesheet" href="style1.css" >   
+
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+</head>
+
+<body>
+<header>
+<h2 class="logo">Wise Wallet</h2>
+<nav class="navigation">
+  <a href="remaining.html">Home</a>
+  <a href="income tracker.html">Income</a>
+  <a href="new tracker.html">Expense </a>
+  <a href="ExpenseVsIncome.html">Statistics</a>
+  <button class="btnlogin-popup" onclick="location.href='../old one/index.html'">Logout</button>
+  
+  </nav>
+</header>
+
+
+
+<div class="container"> 
+    <h2>Income Table</h2>
+    <div class="input-section">
+        <label for="category-select">Category:</label>
+        <select id="category-select">
+            <option value="Salary">Salary</option>
+            <option value="Bonus">Bonus</option>
+            <option value="Allowance">Allowance</option>
+            <option value="Petty">Petty cash</option>
+            <option value="Rental">Rental</option>
+            <option value="Other">Other</option>
+        </select>
+        <label for="amount-input">Amount:</label>
+        <input type="number" id="amount-input">
+        <label for="date-input">Date:</label>
+        <input type="date" id="date-input">
+        
+    </div>
+
+    <button id="add-btn" style="background:linear-gradient(to right ,rgb(130, 172, 16),rgb(5, 173, 5));font-weight: bolder;">Add</button>
+    
+    <div class="expenses-list">
+        <h3>Income List</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="income-table-body">
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total:</td>
+                    <td id="total-amount"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div> 
+    <script src="script2.js"></script>
+
+
+<script src="script.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+
+</body>
+
+
+
+
+
+</html>

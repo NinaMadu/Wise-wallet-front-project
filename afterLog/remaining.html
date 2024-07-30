@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="account-summary.css">
     <style>
+        body{
+           
+        }
         header {
             text-align: center;
         }
@@ -23,12 +26,10 @@
             text-align: center;
         }
 
-        
         #accountSummaryContainer {
             font-size: 16px; 
         }
 
-        
         #accountSummaryContainer .container6 h1,
         #accountSummaryContainer .container6 span {
             font-size: inherit; 
@@ -48,7 +49,45 @@
 
         .navigation {
             position: relative; 
-            
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 100px;
+            height: calc(200h - 100px); /* Adjust based on the height of the header */
+        }
+
+        .grid-item {
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 2 / 1; /* Ensures the divs remain square */
+            padding: 40px;
+            box-sizing: border-box; /* Ensure padding is included in the total size */
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .details {
+            text-align: left; /* Align the details to the left */
+            margin-top: 40px; /* Space between h1 and details */
+        }
+
+        .details p {
+            margin: 5px 0; /* Space between paragraphs */
         }
 
     </style>
@@ -57,8 +96,6 @@
 <body>
     <header>
         <h2 class="logo">Wise Wallet</h2>
-        
-        
         <nav class="navigation">
             <a href="homeBalance.html">Home</a>
             <a href="income tracker.html">Income</a>
@@ -68,25 +105,221 @@
         </nav>
     </header>
 
-    
-    <div id="accountSummaryContainer">
-        
-
-        
-        <div class="container6">
-            <h2>Account Summary : </h2>
-            <br>
-
-            <h1>Total Income: $<span id="totalIncome">0.00</span></h1>
-            <h1>Total Expense: $<span id="totalExpense">0.00</span></h1>
-            <h1>Remaining Balance: $<span id="remaining">0.00</span></h1>
-            <h1>Expense Percentage: <span id="expensePercentage">0.00%</span></h1>
-            <h1>Balance Percentage: <span id="balancePercentage">0.00%</span></h1>
+    <div id="accountSummaryContainer" class="grid-container">
+        <div class="grid-item">
+            <p class="name-expense">Account Summary</p>
+            <div class="details">
+                <p>Total Income: $<span id="totalIncome">0.00</span></p>
+                <p>Total Expense: $<span id="totalExpense">0.00</span></p>
+                <p>Remaining Balance: $<span id="remain">0.00</span></p>
+                <p>Expense Percentage: <span id="expensePercentage">0.00%</span></p>
+                <p>Balance Percentage: <span id="balancePercentage">0.00%</span></p>
+            </div>
         </div>
-
-        <script src="remaining-script.js"></script>
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <div class="grid-item">
+            <div class="chart-container" style="background:linear-gradient(to bottom ,rgb(218, 232, 245),rgb(255, 255, 255));">
+                <p class="name-expense">Expense and Income Statistics</p>
+                <Br/>
+               
+                <canvas id="combinedChart"></canvas>
+            </div>
+        </div>
+        <div class="grid-item">
+            <div class="chart-container" style="background:linear-gradient(to bottom ,rgba(233, 231, 231, 0.774),rgb(255, 255, 255));">
+                <p class="name-expense">Expenses Trend</p>
+                <Br/>
+                <canvas id="expenseLineChart"></canvas>
+            </div>
+        </div>
+        <div class="grid-item">
+            <div class="chart-container" style="background:linear-gradient(to bottom ,rgba(245, 233, 218, 0.774),rgb(255, 255, 255));">
+                <p class="name-expense">Incomes Trend</p>
+                <Br/>
+                <canvas id="incomeLineChart"></canvas>
+            </div>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let expenses = JSON.parse(sessionStorage.getItem('expenses')) || [];
+        let incomes = JSON.parse(sessionStorage.getItem('incomes')) || [];
+
+        function saveDataToSessionStorage() {
+            sessionStorage.setItem('expenses', JSON.stringify(expenses));
+            sessionStorage.setItem('incomes', JSON.stringify(incomes));
+        }
+
+        function groupDataByDate(expenseData, incomeData) {
+            const groupedData = {};
+            const allDates = new Set([...expenseData.map(entry => entry.date), ...incomeData.map(entry => entry.date)]);
+
+            for (const date of allDates) {
+                const expenseTotal = expenseData.filter(entry => entry.date === date).reduce((total, entry) => total + parseFloat(entry.amount), 0);
+                const incomeTotal = incomeData.filter(entry => entry.date === date).reduce((total, entry) => total + parseFloat(entry.amount), 0);
+                groupedData[date] = {
+                    expense: expenseTotal,
+                    income: incomeTotal
+                };
+            }
+
+            return groupedData;
+        }
+
+        function updateCombinedChart() {
+            var ctx = document.getElementById('combinedChart').getContext('2d');
+            const groupedData = groupDataByDate(expenses, incomes);
+            const dates = Object.keys(groupedData);
+            const expenseAmounts = dates.map(date => groupedData[date].expense);
+            const incomeAmounts = dates.map(date => groupedData[date].income);
+
+            var chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                            label: 'Total Expenses',
+                            data: expenseAmounts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Total Incomes',
+                            data: incomeAmounts,
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: true,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Expense and Income vs Date'
+                    },
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }],
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    barPercentage: 0.25
+                }
+            };
+
+            var myCombinedChart = new Chart(ctx, chartConfig);
+        }
+
+        function updateLineCharts() {
+            var ctxExpense = document.getElementById('expenseLineChart').getContext('2d');
+            var ctxIncome = document.getElementById('incomeLineChart').getContext('2d');
+
+            const groupedData = groupDataByDate(expenses, incomes);
+            const dates = Object.keys(groupedData);
+            const expenseAmounts = dates.map(date => groupedData[date].expense);
+            const incomeAmounts = dates.map(date => groupedData[date].income);
+
+            var expenseLineChartConfig = {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Expenses',
+                        data: expenseAmounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: true
+                    },
+                    title: {
+                        display: true,
+                        text: 'Expenses Trend'
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }]
+                    }
+                }
+            };
+
+            var incomeLineChartConfig = {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Incomes',
+                        data: incomeAmounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: true
+                    },
+                    title: {
+                        display: true,
+                        text: 'Incomes Trend'
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }]
+                    }
+                }
+            };
+
+            var expenseLineChart = new Chart(ctxExpense, expenseLineChartConfig);
+            var incomeLineChart = new Chart(ctxIncome, incomeLineChartConfig);
+        }
+
+        function calculateTotalAmount(data) {
+            return data.reduce((total, entry) => total + parseFloat(entry.amount), 0);
+        }
+
+        updateCombinedChart();
+        updateLineCharts();
+    </script>
+
+    <script src="remaining-script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

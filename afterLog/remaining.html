@@ -58,7 +58,8 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             padding: 100px;
-            height: calc(200h - 100px); /* Adjust based on the height of the header */
+            height: calc(200h - 100px);
+            margin-top: 40px; /* Adjust based on the height of the header */
         }
 
         .grid-item {
@@ -69,7 +70,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            aspect-ratio: 2 / 1; /* Ensures the divs remain square */
+            aspect-ratio: 4 / 3; /* Ensures the divs remain square */
             padding: 40px;
             box-sizing: border-box; /* Ensure padding is included in the total size */
         }
@@ -85,11 +86,14 @@
 
         .details {
             text-align: left; /* Align the details to the left */
-            margin-top: 40px; /* Space between h1 and details */
+            margin-top: 40px; 
+            
+            /* Space between h1 and details */
         }
 
         .details p {
-            margin: 5px 0; /* Space between paragraphs */
+            margin: 5px 0;
+           /* Space between paragraphs */
         }
 
         .sidebar {
@@ -208,14 +212,15 @@
     </header>
 
     <div id="accountSummaryContainer" class="grid-container">
-        <div class="grid-item">
-            <p class="name-expense">Account Summary</p>
-            <div class="details">
-                <p>Total Income: $<span id="totalIncome">0.00</span></p>
-                <p>Total Expense: $<span id="totalExpense">0.00</span></p>
-                <p>Remaining Balance: $<span id="remain">0.00</span></p>
-                <p>Expense Percentage: <span id="expensePercentage">0.00%</span></p>
-                <p>Balance Percentage: <span id="balancePercentage">0.00%</span></p>
+        <div class="grid-item" style="background:linear-gradient(to right ,rgb(190, 235, 242),rgba(214, 226, 231, 0.97))" >
+          
+            <p class="name-expense" style="font-size:xx-large" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Account Summary</p>
+            <div class="details" >
+                <p style="font-weight: 600">Total Income: $<span id="totalIncome">0.00</span></p>
+                <p style="font-weight: 600">Total Expense: $<span id="totalExpense">0.00</span></p>
+                <p style="font-weight: 600">Remaining Balance: $<span id="remain">0.00</span></p>
+                <p style="font-weight: 600">Expense Percentage: <span id="expensePercentage">0.00%</span></p>
+                <p style="font-weight: 600">Balance Percentage: <span id="balancePercentage">0.00%</span></p>
             </div>
         </div>
         <div class="grid-item">
